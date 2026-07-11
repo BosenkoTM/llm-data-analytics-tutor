@@ -84,4 +84,5 @@ flowchart TD
 ## Контакты
 
 Автор: Босенко Т. М. (МГПУ).
-Рабочий e-mail: `bosenkotm@mgpu.ru`.
+
+e-mail: `bosenkotm@mgpu.ru`.
