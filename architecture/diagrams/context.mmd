@@ -1,0 +1,30 @@
+%% Контекстная диаграмма (C4, уровень 1): система в окружении акторов и инфраструктуры
+flowchart TD
+    Student(["Студент<br/>(магистратура)"])
+    Teacher(["Преподаватель"])
+
+    subgraph SYS["LLM-ассистент potanin_assistant"]
+        direction TB
+        UI["Веб-интерфейс<br/>CopilotKit / AG-UI"]
+        Backends["Бэкенды-агенты<br/>Тьютор + Ассистент (FastAPI)"]
+        MCPLayer["Слой MCP<br/>tools / resources / prompts"]
+        UI --> Backends --> MCPLayer
+    end
+
+    RAG[("RAG-база знаний<br/>pgvector / PostgreSQL")]
+    LLM["Локальная LLM<br/>Qwen через Ollama"]
+    Trace[("Журнал оркестрации<br/>λ(d) · lambda_trace_log")]
+
+    Student -->|вопросы, код| UI
+    Teacher -->|проверка работ, HITL| UI
+
+    MCPLayer -->|retrieval| RAG
+    MCPLayer -->|инференс| LLM
+    Backends -.->|write_trace| Trace
+
+    classDef actor fill:#EEEDFE,stroke:#534AB7,color:#26215C;
+    classDef store fill:#E6F1FB,stroke:#185FA5,color:#042C53;
+    classDef infra fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
+    class Student,Teacher actor;
+    class RAG,Trace store;
+    class LLM infra;
