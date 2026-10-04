@@ -1,0 +1,22 @@
+%% Sequence: студент отправляет код → валидация → RAG → LLM → трасса → ответ
+sequenceDiagram
+    actor S as Студент
+    participant UI as Веб-интерфейс (CopilotKit)
+    participant T as Агент-Тьютор
+    participant M as Слой MCP
+    participant R as RAG (pgvector)
+    participant L as LLM (Qwen/Ollama)
+    participant J as Журнал λ(d)
+
+    S->>UI: отправляет код / вопрос
+    UI->>T: AG-UI запрос
+    T->>M: tools/call validate_code(lang, source)
+    M-->>T: структурированный вердикт
+    T->>R: retrieval по материалам курса
+    R-->>T: релевантные фрагменты
+    T->>L: запрос с контекстом
+    L-->>T: сгенерированный разбор
+    T->>M: tools/call write_trace(λ(d))
+    M->>J: запись события
+    T-->>UI: ответ + карточка результата
+    UI-->>S: объяснение (наводящие подсказки)

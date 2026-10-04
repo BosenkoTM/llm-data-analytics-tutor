@@ -1,0 +1,23 @@
+%% Мост Moodle 5 → EduTutor (вариант A, универсальный)
+flowchart LR
+  subgraph Moodle5["Moodle 5 · любой курс"]
+    AS["mod_assign"]
+    PL["local_edututor"]
+    AS --> PL
+  end
+  subgraph EduTutor["EduTutor"]
+    UI["UI /moodle/launch"]
+    T["Агент-Тьютор"]
+    RAG[("RAG pgvector")]
+    UI --> T --> RAG
+  end
+  PL -->|"token: course_shortname + assign_name"| UI
+
+  classDef lms fill:#E6F1FB,stroke:#185FA5,color:#042C53;
+  classDef ui fill:#EEEDFE,stroke:#534AB7,color:#26215C;
+  classDef ag fill:#E1F5EE,stroke:#0F6E56,color:#04342C;
+  classDef store fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
+  class AS,PL lms;
+  class UI ui;
+  class T ag;
+  class RAG store;

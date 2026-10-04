@@ -1,0 +1,36 @@
+%% Контекстная диаграмма (C4, уровень 1): EduTutor в окружении акторов и инфраструктуры
+flowchart TD
+    Student(["Студент<br/>(магистратура)"])
+    Teacher(["Преподаватель"])
+    Moodle(["Moodle 5<br/>local_edututor"])
+
+    subgraph SYS["EduTutor"]
+        direction TB
+        UI["Веб-интерфейс<br/>CopilotKit / AG-UI"]
+        Backends["Бэкенды-агенты<br/>Тьютор + Ассистент (FastAPI)"]
+        MCPLayer["Слой MCP<br/>tools / resources / prompts"]
+        UI --> Backends --> MCPLayer
+    end
+
+    RAG[("RAG-база знаний<br/>pgvector / PostgreSQL")]
+    LLM["Локальная LLM<br/>Qwen через Ollama"]
+    Trace[("Журнал оркестрации<br/>λ(d) · lambda_trace_log")]
+    Loader["EduRAG Loader"]
+
+    Student -->|вопросы, код| UI
+    Teacher -->|проверка работ, HITL| UI
+    Moodle -->|"shortname + assign_name"| UI
+    Loader -->|чанки| RAG
+
+    MCPLayer -->|retrieval| RAG
+    MCPLayer -->|инференс| LLM
+    Backends -.->|write_trace| Trace
+
+    classDef actor fill:#EEEDFE,stroke:#534AB7,color:#26215C;
+    classDef store fill:#E6F1FB,stroke:#185FA5,color:#042C53;
+    classDef infra fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
+    classDef lms fill:#E1F5EE,stroke:#0F6E56,color:#04342C;
+    class Student,Teacher actor;
+    class RAG,Trace store;
+    class LLM,Loader infra;
+    class Moodle lms;
