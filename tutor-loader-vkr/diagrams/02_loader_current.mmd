@@ -1,0 +1,22 @@
+flowchart TB
+T["Преподаватель / методист"] --> C["Дисциплина, тема, занятие"]
+C --> U["Текст, файлы, Notebook"]
+U --> P["Извлечение и разбиение текста"]
+P --> V["Предпросмотр и проверка"]
+V --> E["Публикация: E5-large"]
+E --> DB[("PostgreSQL / pgvector")]
+DB --> H["Диагностика: hybrid_v1"]
+H --> T
+DB --> R["Поиск контекста EduTutor"]
+R --> A["Ответ агента по материалам"]
+H -. "Единый поиск ещё в развитии" .-> R
+
+classDef user fill:#E2F6F2,stroke:#14827A,color:#14524F,stroke-width:2px;
+classDef base fill:#E9F2FF,stroke:#3575B9,color:#173F68,stroke-width:2px;
+classDef data fill:#E4F5E9,stroke:#288456,color:#154A32,stroke-width:2px;
+classDef ai fill:#F0E9FF,stroke:#8356BD,color:#4B2B73,stroke-width:2px;
+classDef new fill:#FFF1D8,stroke:#BC7B18,color:#664510,stroke-width:2px;
+class T user;
+class C,U,P,V base;
+class E,DB data;
+class H,R,A ai;

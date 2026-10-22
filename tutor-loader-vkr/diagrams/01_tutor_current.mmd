@@ -1,0 +1,31 @@
+flowchart TB
+subgraph EDU["Образовательный уровень"]
+ T["Преподаватель"] --> M["Moodle 5"]
+ S["Студент"] --> M
+end
+subgraph APP["Сервисы EduTutor"]
+ L["EduRAG Loader"]
+ UI["EduTutor UI"] --> A["LangGraph: Тьютор и Ассистент"] --> MCP["MCP: инструменты"]
+end
+subgraph DATA["Локальная инфраструктура"]
+ E["E5-large"]
+ KB[("PostgreSQL / pgvector")]
+ Q["Qwen / Ollama"]
+end
+T --> L
+M -->|"Подписанный запуск"| UI
+L --> E --> KB
+MCP --> KB
+MCP --> Q
+Q --> UI
+A -. "Предварительные замечания" .-> T
+
+classDef user fill:#E2F6F2,stroke:#14827A,color:#14524F,stroke-width:2px;
+classDef base fill:#E9F2FF,stroke:#3575B9,color:#173F68,stroke-width:2px;
+classDef data fill:#E4F5E9,stroke:#288456,color:#154A32,stroke-width:2px;
+classDef ai fill:#F0E9FF,stroke:#8356BD,color:#4B2B73,stroke-width:2px;
+classDef new fill:#FFF1D8,stroke:#BC7B18,color:#664510,stroke-width:2px;
+class T,S user;
+class M,L,UI base;
+class A,MCP,Q ai;
+class E,KB data;

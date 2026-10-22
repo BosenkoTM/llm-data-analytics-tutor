@@ -1,0 +1,21 @@
+flowchart TB
+Q["Запрос и контекст пользователя"] --> ACL["Разрешённые опубликованные версии"]
+ACL --> F["Полнотекстовый поиск"]
+ACL --> V["Векторный поиск"]
+F --> FD["Рейтинг версий документов"]
+V --> VD["Рейтинг версий документов"]
+FD --> R["Объединение RRF"]
+VD --> R
+R --> O["Источник, версия, фрагмент"]
+O --> D["Повторная проверка доступа"]
+D --> M[("MinIO: скачивание оригинала")]
+
+classDef user fill:#E2F6F2,stroke:#14827A,color:#14524F,stroke-width:2px;
+classDef base fill:#E9F2FF,stroke:#3575B9,color:#173F68,stroke-width:2px;
+classDef data fill:#E4F5E9,stroke:#288456,color:#154A32,stroke-width:2px;
+classDef ai fill:#F0E9FF,stroke:#8356BD,color:#4B2B73,stroke-width:2px;
+classDef new fill:#FFF1D8,stroke:#BC7B18,color:#664510,stroke-width:2px;
+class Q user;
+class ACL,D base;
+class F,V,FD,VD,R,O new;
+class M data;

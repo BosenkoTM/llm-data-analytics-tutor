@@ -1,0 +1,26 @@
+flowchart TB
+T["Методист"] --> UI["Loader: вкладка Документы"]
+S["Студент"] --> RESULT["Каталог и результаты поиска"]
+UI --> API["API документов и версий"]
+API --> PG[("PostgreSQL: каталог и версии")]
+API --> MIN[("MinIO: оригиналы PDF / DOCX")]
+API --> JOB["Задания обработки и повторы"]
+JOB --> PIPE["Извлечение, предпросмотр, E5-large"]
+PIPE --> IDX[("PostgreSQL / pgvector: индекс")]
+PG --> SEARCH["FTS + векторный поиск + RRF"]
+IDX --> SEARCH
+RESULT --> SEARCH
+RESULT --> GET["Скачивание: проверка прав"]
+GET --> PG
+GET --> MIN
+SEARCH -. "Следующий этап интеграции" .-> MCP["MCP / EduTutor"]
+
+classDef user fill:#E2F6F2,stroke:#14827A,color:#14524F,stroke-width:2px;
+classDef base fill:#E9F2FF,stroke:#3575B9,color:#173F68,stroke-width:2px;
+classDef data fill:#E4F5E9,stroke:#288456,color:#154A32,stroke-width:2px;
+classDef ai fill:#F0E9FF,stroke:#8356BD,color:#4B2B73,stroke-width:2px;
+classDef new fill:#FFF1D8,stroke:#BC7B18,color:#664510,stroke-width:2px;
+class T,S user;
+class PIPE,MCP base;
+class PG,IDX data;
+class UI,RESULT,API,MIN,JOB,SEARCH,GET new;
