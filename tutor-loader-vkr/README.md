@@ -9,7 +9,6 @@
 ## Материалы
 
 - [Скорректированное описание ВКР](docs/vkr_description.md)
-- [Документ Word](docs/vkr_description.docx)
 - [Текущая и целевая архитектуры с Mermaid](docs/architecture.md)
 - [Задание и границы вклада студента](docs/student_scope.md)
 - [Проект API и модели данных](docs/api_and_data.md)
