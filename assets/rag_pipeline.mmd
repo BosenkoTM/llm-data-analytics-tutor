@@ -1,0 +1,31 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "nodeSpacing": 38, "rankSpacing": 52}, "themeVariables": {"fontFamily": "Arial, sans-serif", "fontSize": "15px", "background": "#ffffff", "primaryTextColor": "#122B5E", "lineColor": "#7692B1"}}}%%
+flowchart TB
+  subgraph PREP["Подготовка материалов"]
+    direction LR
+    P(["Преподаватель"]) --> C["Дисциплина<br/>и тема"]
+    C --> U["Загрузка<br/>документа"]
+    U --> X["Обработка<br/>и разбиение"]
+    X --> E["Эмбеддинги<br/>и индекс"]
+  end
+  E --> DB[("PostgreSQL<br/>pgvector")]
+  subgraph USE["Поддержка обучающегося"]
+    direction LR
+    Q(["Вопрос<br/>обучающегося"]) --> RET["Поиск<br/>по материалам"]
+    RET --> T["Tutor + LLM"]
+    T --> A(["Предметное<br/>объяснение"])
+  end
+  DB --> RET
+  class P,Q,A person;
+  class C,U,X,E,DB,RET data;
+  class T agent;
+  style PREP fill:#F4FBF9,stroke:#A2DCCA,stroke-width:1px;
+  style USE fill:#F5F8FF,stroke:#B4C8E9,stroke-width:1px;
+classDef person fill:#E8EEFC,stroke:#345FA8,color:#122B5E,stroke-width:1.7px;
+classDef lms fill:#FFF1DA,stroke:#C5852D,color:#66400B,stroke-width:1.7px;
+classDef ui fill:#E8F3FE,stroke:#1769D2,color:#123F7A,stroke-width:1.7px;
+classDef agent fill:#F0E9FC,stroke:#7959C7,color:#443076,stroke-width:1.7px;
+classDef data fill:#E1F5F0,stroke:#008F86,color:#075950,stroke-width:1.7px;
+classDef infra fill:#EFF2F7,stroke:#6B7F95,color:#33465E,stroke-width:1.7px;
+classDef future fill:#F8F6FC,stroke:#9A88B9,color:#605579,stroke-width:1.5px,stroke-dasharray:4 4;
+classDef guard fill:#FFF0EB,stroke:#D36E56,color:#813C2C,stroke-width:1.7px;
+linkStyle default stroke:#7692B1,stroke-width:1.4px;

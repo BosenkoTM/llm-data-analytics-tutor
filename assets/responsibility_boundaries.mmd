@@ -1,0 +1,38 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "nodeSpacing": 38, "rankSpacing": 52}, "themeVariables": {"fontFamily": "Arial, sans-serif", "fontSize": "15px", "background": "#ffffff", "primaryTextColor": "#122B5E", "lineColor": "#7692B1"}}}%%
+flowchart TB
+  subgraph EDU["Участники обучения"]
+    direction LR
+    S(["Обучающийся"]) --> W["Самостоятельная<br/>работа"]
+    P(["Преподаватель"]) --> A["Материалы<br/>и критерии"]
+    P --> G["Итоговая<br/>оценка"]
+  end
+  subgraph SYS["Программные компоненты"]
+    direction LR
+    M["Moodle"]
+    L["EduRAG<br/>Loader"]
+    T["Tutor"]
+    AS["Assistant<br/>backend"]
+  end
+  W --> M
+  A --> L
+  L --> T
+  M -. "контекст" .-> T
+  M -. "работа" .-> AS
+  AS -. "рекомендации" .-> P
+  G --> M
+  class S,P person;
+  class W,T ui;
+  class A,L data;
+  class G,AS agent;
+  class M lms;
+  style EDU fill:#F5F8FF,stroke:#B1C7E9,stroke-width:1px;
+  style SYS fill:#F3FBF9,stroke:#A8DACC,stroke-width:1px;
+classDef person fill:#E8EEFC,stroke:#345FA8,color:#122B5E,stroke-width:1.7px;
+classDef lms fill:#FFF1DA,stroke:#C5852D,color:#66400B,stroke-width:1.7px;
+classDef ui fill:#E8F3FE,stroke:#1769D2,color:#123F7A,stroke-width:1.7px;
+classDef agent fill:#F0E9FC,stroke:#7959C7,color:#443076,stroke-width:1.7px;
+classDef data fill:#E1F5F0,stroke:#008F86,color:#075950,stroke-width:1.7px;
+classDef infra fill:#EFF2F7,stroke:#6B7F95,color:#33465E,stroke-width:1.7px;
+classDef future fill:#F8F6FC,stroke:#9A88B9,color:#605579,stroke-width:1.5px,stroke-dasharray:4 4;
+classDef guard fill:#FFF0EB,stroke:#D36E56,color:#813C2C,stroke-width:1.7px;
+linkStyle default stroke:#7692B1,stroke-width:1.4px;
