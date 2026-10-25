@@ -1,0 +1,31 @@
+flowchart LR
+    Q(["Запрос и контекст"]) --> C["Контроллер<br/>Orchestrator"]
+    C --> RT{"Маршрут по компетенциям<br/>τ(x), Θ"}
+    RT -->|a1| T["Tutor<br/>пояснения"]
+    RT -->|a2| V["Валидация<br/>учебного кода"]
+    RT -->|a3| P["Планирование<br/>учебных действий"]
+    RT -->|уточнение| CL["q_clar<br/>запрос контекста"]
+    RT -->|ограничение| SF["q_safe<br/>безопасный отказ"]
+    V --> MC["MCP · validate_code"]
+    T --> AN["Формирование ответа"]
+    MC --> AN
+    P --> AN
+    CL --> AN
+    SF --> AN
+    AN --> L["Трассировка λ<br/>и контроль переходов δ"]
+    class Q person;
+    class C,RT,T,V,P,AN agent;
+    class MC infra;
+    class CL ui;
+    class SF guard;
+    class L data;
+
+classDef person fill:#E5ECFD,stroke:#4164B9,color:#142C59,stroke-width:2px;
+classDef lms fill:#FFF1D6,stroke:#D28A2B,color:#66440C,stroke-width:1.8px;
+classDef ui fill:#E4F1FE,stroke:#2774C7,color:#153D6A,stroke-width:1.8px;
+classDef agent fill:#EDE7FD,stroke:#7960C2,color:#3D2D73,stroke-width:1.8px;
+classDef data fill:#E1F5EF,stroke:#268A6D,color:#155C4B,stroke-width:1.8px;
+classDef infra fill:#EBEFF5,stroke:#6F8198,color:#35445A,stroke-width:1.8px;
+classDef guard fill:#FFEBE8,stroke:#C76650,color:#7B3429,stroke-width:1.8px;
+classDef future fill:#F4F2FB,stroke:#9D95BD,color:#55506E,stroke-width:1.5px,stroke-dasharray:5 4;
+linkStyle default stroke:#63809B,stroke-width:1.8px;
