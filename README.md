@@ -1,197 +1,214 @@
 # EduTutor
 
-### Интеллектуальная поддержка обучения анализу данных в магистратуре
+**Интеллектуальная платформа сопровождения обучения в цифровой образовательной среде**
 
-**Образовательная платформа с локальной LLM, предметной базой знаний и многоагентной архитектурой**  
-Московский городской педагогический университет · Институт цифрового образования
+EduTutor — разрабатываемая образовательная система на основе больших языковых моделей и предметных баз знаний. Платформа объединяет поддержку самостоятельной работы обучающихся, управление учебными материалами и агентные сервисы для преподавателя.
 
-Проект развивается в рамках гранта **«LLM-ассистент для интеллектуальной поддержки обучения анализу данных в магистратуре»**, поддержанного Благотворительным фондом Владимира Потанина (2026).
+Проект развивается в **Московском городском педагогическом университете (МГПУ), Институт цифрового образования**, при поддержке **Благотворительного фонда Владимира Потанина** — «LLM-ассистент для интеллектуальной поддержки обучения анализу данных в магистратуре».
 
-**Схема EduTutor**
+[Образовательные сценарии](education/README.md) · [Архитектура](architecture/01_overview.md) · [Технологический стек](architecture/06_technology_stack.md) · [Компоненты](services/edututor/README.md)
 
-```mermaid
-flowchart LR
-    S(["Магистрант"]) --> M["Задание в Moodle 5"]
-    M -. "контекст задания" .-> W["Student Workspace"]
-    W --> T["Агент-Тьютор"]
-    T --> R["Предметный RAG"]
-    T --> O["Локальная LLM"]
-    R --> K[("База знаний<br/>PostgreSQL / pgvector")]
-    P(["Преподаватель"]) --> L["EduRAG Loader"]
-    L --> K
-    P -. "контроль итоговой оценки" .-> M
-    class S,P person;
-    class M lms;
-    class W ui;
-    class T,O agent;
-    class R,L,K data;
+## Технологический стек
 
-classDef person fill:#E5ECFD,stroke:#4164B9,color:#142C59,stroke-width:2px;
-classDef lms fill:#FFF1D6,stroke:#D28A2B,color:#66440C,stroke-width:1.8px;
-classDef ui fill:#E4F1FE,stroke:#2774C7,color:#153D6A,stroke-width:1.8px;
-classDef agent fill:#EDE7FD,stroke:#7960C2,color:#3D2D73,stroke-width:1.8px;
-classDef data fill:#E1F5EF,stroke:#268A6D,color:#155C4B,stroke-width:1.8px;
-classDef infra fill:#EBEFF5,stroke:#6F8198,color:#35445A,stroke-width:1.8px;
-classDef guard fill:#FFEBE8,stroke:#C76650,color:#7B3429,stroke-width:1.8px;
-classDef future fill:#F4F2FB,stroke:#9D95BD,color:#55506E,stroke-width:1.5px,stroke-dasharray:5 4;
-linkStyle default stroke:#63809B,stroke-width:1.8px;
-```
+**Интерфейс и образовательная среда**
 
-<sub>Исходник схемы: [`edututor_overview.mmd`](assets/edututor_overview.mmd)</sub>
+[![Next.js](https://img.shields.io/badge/Next.js-111827?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![CopilotKit](https://img.shields.io/badge/CopilotKit-1769D2?style=for-the-badge)](https://www.copilotkit.ai/) [![AG-UI](https://img.shields.io/badge/AG-UI-0068D2?style=for-the-badge)](https://docs.ag-ui.com/) [![Moodle 5](https://img.shields.io/badge/Moodle%205-F08A24?style=for-the-badge&logo=moodle&logoColor=white)](https://moodle.org/)
 
-**Главная идея:** EduTutor сопровождает самостоятельную работу магистранта, помогая понимать задания, анализировать данные и разбирать ошибки, а преподавателю даёт инструменты подготовки учебного контента и предварительной обратной связи. **Окончательная оценка всегда остаётся за преподавателем.**
+**Агенты и серверные сервисы**
 
-[Образовательный сценарий](education/01_student_path.md) · [Архитектура платформы](architecture/01_overview.md) · [Компоненты и агенты](architecture/02_agents.md) · [База знаний и RAG](architecture/03_rag.md)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) [![Flask](https://img.shields.io/badge/Flask-3B5468?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/) [![LangGraph](https://img.shields.io/badge/LangGraph-635BCE?style=for-the-badge)](https://www.langchain.com/langgraph) [![MCP](https://img.shields.io/badge/MCP-6750A4?style=for-the-badge)](https://modelcontextprotocol.io/)
 
----
+**Модели, поиск и хранение данных**
 
-## Для кого создаётся система
+[![Ollama](https://img.shields.io/badge/Ollama-33465E?style=for-the-badge)](https://ollama.com/) [![Qwen](https://img.shields.io/badge/Qwen-7B61C8?style=for-the-badge)](https://qwenlm.github.io/) ![RAG](https://img.shields.io/badge/RAG-008F86?style=for-the-badge) [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![pgvector](https://img.shields.io/badge/pgvector-008C9E?style=for-the-badge)](https://github.com/pgvector/pgvector) ![E5 embeddings](https://img.shields.io/badge/E5%20embeddings-008F86?style=for-the-badge)
 
-| Магистранту | Преподавателю | Образовательной программе |
-|:--|:--|:--|
-| Пояснения к заданиям, помощь с Python, SQL и анализом данных | Создание структуры дисциплины и подготовка материалов в EduRAG Loader | Предметно ориентированная база знаний |
-| Подсказки по поиску ошибок и интерпретации результатов | Предварительные замечания по работе через backend Агента-Ассистента | Поддержка дисциплин и учебных активностей |
-| Работа с контекстом дисциплины, а не с абстрактным чат-ботом | Контроль содержания и окончательного оценивания | Развитие цифровой образовательной среды |
+[Назначение технологий и их взаимодействие](architecture/06_technology_stack.md)
 
-**Схема образовательного маршрута**
+## Концепция платформы
 
 ```mermaid
-flowchart LR
-    A(["Магистрант"]) --> B["Прочитать задание<br/>в Moodle"]
-    B --> C["Уточнить подход<br/>с Tutor"]
-    C --> D["Самостоятельно<br/>обработать данные"]
-    D --> E["Проверить выводы<br/>и исправить ошибки"]
-    E --> F["Сдать работу<br/>в Moodle"]
-    F --> G(["Обратная связь<br/>преподавателя"])
-    G -. "доработка" .-> D
-    class A,G person;
-    class B,F lms;
-    class C agent;
-    class D,E ui;
-
-classDef person fill:#E5ECFD,stroke:#4164B9,color:#142C59,stroke-width:2px;
-classDef lms fill:#FFF1D6,stroke:#D28A2B,color:#66440C,stroke-width:1.8px;
-classDef ui fill:#E4F1FE,stroke:#2774C7,color:#153D6A,stroke-width:1.8px;
-classDef agent fill:#EDE7FD,stroke:#7960C2,color:#3D2D73,stroke-width:1.8px;
-classDef data fill:#E1F5EF,stroke:#268A6D,color:#155C4B,stroke-width:1.8px;
-classDef infra fill:#EBEFF5,stroke:#6F8198,color:#35445A,stroke-width:1.8px;
-classDef guard fill:#FFEBE8,stroke:#C76650,color:#7B3429,stroke-width:1.8px;
-classDef future fill:#F4F2FB,stroke:#9D95BD,color:#55506E,stroke-width:1.5px,stroke-dasharray:5 4;
-linkStyle default stroke:#63809B,stroke-width:1.8px;
-```
-
-<sub>Исходник схемы: [`learning_journey.mmd`](assets/learning_journey.mmd)</sub>
-
-## Две дисциплины — единая методология
-
-Проект ориентирован на направление **38.04.05 «Бизнес-информатика»**, профиль **«Бизнес-аналитика и большие данные»**.
-
-| Дисциплина | Практический результат |
-|---|---|
-| **Python для анализа данных** | Подготовка, исследование, визуализация данных и интерпретация результатов |
-| **Программные средства сбора, консолидации и аналитики данных** | Работа с API и веб-источниками, очистка, интеграция данных и управленческие выводы |
-
-База знаний расширяется по мере публикации преподавателем материалов. Состав доступного контента зависит от конкретной дисциплины и этапа наполнения.
-
-[Подробнее об учебных активностях](education/03_courses.md)
-
-## Как устроен EduTutor
-
-**Цветная архитектура трёх контуров**
-
-```mermaid
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "nodeSpacing": 38, "rankSpacing": 52}, "themeVariables": {"fontFamily": "Arial, sans-serif", "fontSize": "15px", "background": "#ffffff", "primaryTextColor": "#122B5E", "lineColor": "#7692B1"}}}%%
 flowchart TB
-    subgraph ST["STUDENT · Учебный контур"]
-        direction LR
-        M["Moodle 5"] -. "контекст задания" .-> W["Workspace"]
-        W --> T["Tutor"]
-    end
-    subgraph ML["MAS · Контур оркестрации"]
-        direction LR
-        OR["Orchestrator"] --> A1["a1 · Tutor"]
-        OR --> A2["a2 · Валидация"]
-        OR --> A3["a3 · Планирование"]
-        A2 --> MCP["Инструменты MCP<br/>stdio"]
-    end
-    subgraph TR["TEACHER · Контур преподавателя"]
-        direction LR
-        P["Преподаватель"] --> L["EduRAG Loader"]
-        P -. "запрос на анализ" .-> AS["Assistant backend"]
-        AS -. "утверждение человеком" .-> P
-        FUT["Интерфейс /teacher<br/>разрабатывается"]
-    end
-    subgraph DS["Данные и модель"]
-        direction LR
-        KB[("Учебная база знаний<br/>PostgreSQL / pgvector")]
-        OLL["Qwen / Ollama"]
-    end
-    T --> KB
-    T --> OLL
-    L --> KB
-    A1 --> KB
-    A3 -. "контент РПД отложен" .-> FUT
-    class M lms;
-    class W ui;
-    class T,OR,A1,A2,A3,AS agent;
-    class MCP,OLL infra;
-    class P person;
-    class L,KB data;
-    class FUT future;
-style ST fill:#F4F8FF,stroke:#A2BCEE,stroke-width:1px;
-style ML fill:#F7F4FF,stroke:#B9A4E7,stroke-width:1px;
-style TR fill:#F3FAF8,stroke:#A2D8C8,stroke-width:1px;
-style DS fill:#F6F8FA,stroke:#BBC7D3,stroke-width:1px;
-classDef person fill:#E5ECFD,stroke:#4164B9,color:#142C59,stroke-width:2px;
-classDef lms fill:#FFF1D6,stroke:#D28A2B,color:#66440C,stroke-width:1.8px;
-classDef ui fill:#E4F1FE,stroke:#2774C7,color:#153D6A,stroke-width:1.8px;
-classDef agent fill:#EDE7FD,stroke:#7960C2,color:#3D2D73,stroke-width:1.8px;
-classDef data fill:#E1F5EF,stroke:#268A6D,color:#155C4B,stroke-width:1.8px;
-classDef infra fill:#EBEFF5,stroke:#6F8198,color:#35445A,stroke-width:1.8px;
-classDef guard fill:#FFEBE8,stroke:#C76650,color:#7B3429,stroke-width:1.8px;
-classDef future fill:#F4F2FB,stroke:#9D95BD,color:#55506E,stroke-width:1.5px,stroke-dasharray:5 4;
-linkStyle default stroke:#63809B,stroke-width:1.8px;
+  subgraph STUD["Сопровождение обучения"]
+    direction LR
+    S(["Обучающийся"]) --> MD["Задание<br/>в Moodle 5"]
+    MD -.-> UI["Student<br/>Workspace"]
+    UI --> T["Агент-<br/>тьютор"]
+  end
+  subgraph KNOW["Знания и генерация"]
+    direction LR
+    R["Предметный<br/>поиск RAG"] --> PG[("PostgreSQL<br/>pgvector")]
+    O["Локальная<br/>LLM"]
+  end
+  PR(["Преподаватель"]) --> LO["EduRAG<br/>Loader"]
+  LO --> PG
+  T --> R
+  T --> O
+  PR -. "итоговая оценка" .-> MD
+  class S,PR person;
+  class MD lms;
+  class UI ui;
+  class T,O agent;
+  class LO,R,PG data;
+  style STUD fill:#F5F8FF,stroke:#A9BDE9,stroke-width:1px;
+  style KNOW fill:#F2FBF8,stroke:#9ED9CA,stroke-width:1px;
+classDef person fill:#E8EEFC,stroke:#345FA8,color:#122B5E,stroke-width:1.7px;
+classDef lms fill:#FFF1DA,stroke:#C5852D,color:#66400B,stroke-width:1.7px;
+classDef ui fill:#E8F3FE,stroke:#1769D2,color:#123F7A,stroke-width:1.7px;
+classDef agent fill:#F0E9FC,stroke:#7959C7,color:#443076,stroke-width:1.7px;
+classDef data fill:#E1F5F0,stroke:#008F86,color:#075950,stroke-width:1.7px;
+classDef infra fill:#EFF2F7,stroke:#6B7F95,color:#33465E,stroke-width:1.7px;
+classDef future fill:#F8F6FC,stroke:#9A88B9,color:#605579,stroke-width:1.5px,stroke-dasharray:4 4;
+classDef guard fill:#FFF0EB,stroke:#D36E56,color:#813C2C,stroke-width:1.7px;
+linkStyle default stroke:#7692B1,stroke-width:1.4px;
 ```
 
-<sub>Исходник схемы: [`platform_architecture.mmd`](assets/platform_architecture.mmd)</sub>
+<sub>Редактируемая диаграмма: [`edututor_overview.mmd`](assets/edututor_overview.mmd)</sub>
 
-| Компонент | Назначение | Документация |
+**Основной принцип — поддержка самостоятельного решения учебной задачи.** Агент-тьютор помогает разобрать формулировку задания, объяснить методы, выявить ошибки кода и интерпретировать результаты. Ответы могут использовать материалы конкретной дисциплины из базы знаний. Преподаватель определяет критерии и сохраняет ответственность за итоговое оценивание.
+
+## Образовательный охват
+
+EduTutor проектируется как **расширяемая платформа для образовательных программ разных уровней и профилей**, а не как решение, ограниченное одной магистерской программой.
+
+| Образовательный трек | Примеры учебных задач |
+|---|---|
+| **Бизнес-информатика и аналитика данных** | Python, SQL, сбор и консолидация данных, аналитические выводы |
+| **Педагогическое образование** | Цифровые технологии обучения, анализ образовательных данных, методические сценарии |
+| **Информатика и программная инженерия** | Алгоритмы, базы данных, работа с кодом, информационный поиск |
+| **Робототехника и IoT** | Телеметрия, потоки данных, обработка сигналов, учебные эксперименты |
+| **Машинное обучение и интеллектуальные системы** | Подготовка данных, построение моделей, анализ качества |
+| **Информационная безопасность** | Разбор технических заданий, моделирование ситуаций, оценка решений |
+
+В рамках **первоначального грантового сценария** прорабатываются дисциплины «Python для анализа данных» и «Программные средства сбора, консолидации и аналитики данных» для направления 38.04.05 «Бизнес-информатика». Другие направления обозначают область **масштабирования архитектуры и методических сценариев**, а не перечень уже завершённых внедрений.
+
+[Образовательные треки и дисциплины](education/03_courses.md)
+
+## Сценарий обучения
+
+```mermaid
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "nodeSpacing": 38, "rankSpacing": 52}, "themeVariables": {"fontFamily": "Arial, sans-serif", "fontSize": "15px", "background": "#ffffff", "primaryTextColor": "#122B5E", "lineColor": "#7692B1"}}}%%
+flowchart TB
+  A(["Обучающийся"]) --> B["Знакомство<br/>с заданием"]
+  B --> C["Вопрос<br/>к тьютору"]
+  C --> D["Самостоятельная<br/>работа"]
+  D --> E["Проверка<br/>результата"]
+  E --> F["Сдача<br/>в Moodle"]
+  F --> G(["Обратная связь<br/>преподавателя"])
+  G -. "доработка" .-> D
+  class A,G person;
+  class B,F lms;
+  class C agent;
+  class D,E ui;
+classDef person fill:#E8EEFC,stroke:#345FA8,color:#122B5E,stroke-width:1.7px;
+classDef lms fill:#FFF1DA,stroke:#C5852D,color:#66400B,stroke-width:1.7px;
+classDef ui fill:#E8F3FE,stroke:#1769D2,color:#123F7A,stroke-width:1.7px;
+classDef agent fill:#F0E9FC,stroke:#7959C7,color:#443076,stroke-width:1.7px;
+classDef data fill:#E1F5F0,stroke:#008F86,color:#075950,stroke-width:1.7px;
+classDef infra fill:#EFF2F7,stroke:#6B7F95,color:#33465E,stroke-width:1.7px;
+classDef future fill:#F8F6FC,stroke:#9A88B9,color:#605579,stroke-width:1.5px,stroke-dasharray:4 4;
+classDef guard fill:#FFF0EB,stroke:#D36E56,color:#813C2C,stroke-width:1.7px;
+linkStyle default stroke:#7692B1,stroke-width:1.4px;
+```
+
+<sub>Редактируемая диаграмма: [`learning_journey.mmd`](assets/learning_journey.mmd)</sub>
+
+Взаимодействие начинается с задания в образовательной среде. Обучающийся выполняет работу самостоятельно и обращается к интеллектуальному помощнику за предметными пояснениями. Результат и итоговая обратная связь остаются частью учебного процесса, организованного преподавателем.
+
+## Архитектура
+
+```mermaid
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "nodeSpacing": 38, "rankSpacing": 52}, "themeVariables": {"fontFamily": "Arial, sans-serif", "fontSize": "15px", "background": "#ffffff", "primaryTextColor": "#122B5E", "lineColor": "#7692B1"}}}%%
+flowchart TB
+  subgraph ST["01 · Учебный контур"]
+    direction LR
+    MO["Moodle 5"] -.-> WS["Workspace"] --> TT["Tutor"]
+  end
+  subgraph MAS["02 · Оркестрация"]
+    direction LR
+    OR["Orchestrator"] --> AG["Агенты<br/>a1 · a2 · a3"]
+    AG --> MP["MCP<br/>stdio"]
+  end
+  subgraph TEACH["03 · Преподаватель"]
+    direction LR
+    PE(["Преподаватель"]) --> LD["EduRAG<br/>Loader"]
+    PE -.-> AS["Assistant<br/>backend"]
+    TI["Интерфейс<br/>/teacher — план"]
+  end
+  subgraph CORE["Знания и модель"]
+    direction LR
+    DB[("PostgreSQL<br/>pgvector")]
+    LL["Ollama<br/>Qwen"]
+  end
+  TT --> DB
+  TT --> LL
+  LD --> DB
+  OR -. "отдельный контур" .-> TT
+  class MO lms;
+  class WS ui;
+  class TT,OR,AG,AS,LL agent;
+  class MP infra;
+  class PE person;
+  class LD,DB data;
+  class TI future;
+  style ST fill:#F4F8FF,stroke:#A9C2E8,stroke-width:1px;
+  style MAS fill:#F8F5FF,stroke:#C4B1E9,stroke-width:1px;
+  style TEACH fill:#F4FBF9,stroke:#A2DCCA,stroke-width:1px;
+  style CORE fill:#F7F9FC,stroke:#BAC9D9,stroke-width:1px;
+classDef person fill:#E8EEFC,stroke:#345FA8,color:#122B5E,stroke-width:1.7px;
+classDef lms fill:#FFF1DA,stroke:#C5852D,color:#66400B,stroke-width:1.7px;
+classDef ui fill:#E8F3FE,stroke:#1769D2,color:#123F7A,stroke-width:1.7px;
+classDef agent fill:#F0E9FC,stroke:#7959C7,color:#443076,stroke-width:1.7px;
+classDef data fill:#E1F5F0,stroke:#008F86,color:#075950,stroke-width:1.7px;
+classDef infra fill:#EFF2F7,stroke:#6B7F95,color:#33465E,stroke-width:1.7px;
+classDef future fill:#F8F6FC,stroke:#9A88B9,color:#605579,stroke-width:1.5px,stroke-dasharray:4 4;
+classDef guard fill:#FFF0EB,stroke:#D36E56,color:#813C2C,stroke-width:1.7px;
+linkStyle default stroke:#7692B1,stroke-width:1.4px;
+```
+
+<sub>Редактируемая диаграмма: [`platform_architecture.mmd`](assets/platform_architecture.mmd)</sub>
+
+| Контур | Основные компоненты | Назначение |
 |---|---|---|
-| **Student Workspace + Агент-Тьютор** | Диалог, пояснения, работа с кодом, RAG-контекст и локальная LLM | [EduTutor](services/edututor/README.md) |
-| **Orchestrator + специализированные агенты** | Управляемая маршрутизация запросов, инструменты MCP и исследование верифицируемой оркестрации | [Агенты](architecture/02_agents.md) |
-| **EduRAG Loader** | Каталогизация, подготовка и публикация учебных материалов для поиска | [EduRAG Loader](services/edurag_loader/README.md) |
-| **Moodle `local_edututor`** | Связь учебного задания Moodle с контекстом обращения к помощнику | [Moodle](services/moodle_edututor/README.md) |
-| **Агент-Ассистент** | Backend предварительного анализа работ; интерфейс преподавателя развивается отдельно | [Сценарий преподавателя](education/02_teacher_path.md) |
+| **Учебный** | Moodle 5, Student Workspace, Tutor, RAG | Контекстная поддержка обучающегося |
+| **Многоагентный** | Orchestrator, специализированные агенты, MCP | Маршрутизация запросов и подключение инструментов |
+| **Преподавательский** | EduRAG Loader, Assistant backend | Управление материалами и подготовка рекомендаций |
+| **Инфраструктурный** | PostgreSQL/pgvector, Ollama/Qwen | Поиск знаний и локальный вывод модели |
 
-**Технологическая основа:** Python · LangGraph · MCP (stdio) · PostgreSQL/pgvector · RAG · Qwen/Ollama · Next.js · CopilotKit/AG-UI · Moodle 5.
+Студенческий Tutor и Orchestrator представляют **разные контуры взаимодействия**. Отдельный интерфейс преподавателя `/teacher` и сквозной цикл согласования оценивания относятся к развитию платформы. Не все функции агентной оркестрации следует считать встроенными в каждый запрос студенческого интерфейса.
 
-## Принципы образовательной системы
+## Программные компоненты
 
-- **Помощь вместо готового решения.** Тьютор раскрывает способы действий и разбирает ошибки, поддерживая самостоятельность студента.
-- **Контекст дисциплины.** Ответ опирается на доступные материалы курса, а не только на общие знания модели.
-- **Преподаватель в контуре решений.** Предварительный анализ не равен автоматическому выставлению оценки.
-- **Открытая архитектурная концепция.** Научные идеи, связи компонентов и педагогические сценарии описаны отдельно от закрытой рабочей конфигурации.
-
-> **Граница реализации.** Студенческий интерфейс, Tutor и предметный RAG составляют действующее ядро системы. Оркестратор и backend Агента-Ассистента существуют как отдельные компоненты; интеграция с Moodle и преподавательский workflow развиваются поэтапно. Интерфейс `/teacher` и автоматическая публикация оценок здесь не заявлены как готовые возможности.
-
-## Навигация
-
-Все схемы на страницах ниже представлены встроенными диаграммами **Mermaid**. Их редактируемые исходники находятся в каталоге [`assets/`](assets/). Цветовое оформление задаётся непосредственно в коде диаграмм через `classDef` и `style` — никакие PNG/SVG для отображения схем не нужны.
-
-
-| Образовательные сценарии | Архитектура | Компоненты |
+| Компонент | Функции | Подробнее |
 |---|---|---|
-| [Путь студента](education/01_student_path.md) | [Общая архитектура](architecture/01_overview.md) | [EduTutor](services/edututor/README.md) |
-| [Роль преподавателя](education/02_teacher_path.md) | [Агенты и маршрутизация](architecture/02_agents.md) | [EduRAG Loader](services/edurag_loader/README.md) |
-| [Дисциплины](education/03_courses.md) | [База знаний и RAG](architecture/03_rag.md) | [Moodle-плагин](services/moodle_edututor/README.md) |
-| | [Контекст Moodle](architecture/04_moodle.md) | |
-| | [Границы ответственности](architecture/05_security.md) | |
+| **EduTutor** | Диалог, разбор задач, анализ кода, предметный поиск | [Агент-тьютор](services/edututor/README.md) |
+| **Orchestrator** | Управление специализированными агентами | [Агенты и маршрутизация](architecture/02_agents.md) |
+| **EduRAG Loader** | Дисциплины, темы, материалы и операции управления базой знаний | [Сервис загрузки](services/edurag_loader/README.md) |
+| **Moodle `local_edututor`** | Передача учебного контекста в интерфейс помощника | [Интеграция Moodle](services/moodle_edututor/README.md) |
+| **Assistant backend** | Подготовка предварительных замечаний преподавателю | [Сценарий преподавателя](education/02_teacher_path.md) |
+
+## Разработка и развитие
+
+В составе EduTutor реализованы студенческий интерфейс и агент-тьютор, серверные компоненты оркестрации, предметный поиск и EduRAG Loader с управлением учебной структурой. Интеграция всех компонентов в единые сквозные образовательные процессы развивается поэтапно.
+
+Ближайшие архитектурные направления: расширение образовательных треков, повышение прослеживаемости ответов до исходных учебных материалов, совершенствование поиска и поддержка преподавательских сценариев с обязательным участием человека в принятии решений.
+
+Публичная документация представляет **назначение продукта, его архитектуру и направления развития**. Она не является инструкцией доступа к рабочей инфраструктуре и не содержит закрытых конфигураций.
+
+## Документация
+
+| Область | Разделы |
+|---|---|
+| Образование | [Образовательные сценарии](education/README.md) · [Путь обучающегося](education/01_student_path.md) · [Роль преподавателя](education/02_teacher_path.md) · [Треки и дисциплины](education/03_courses.md) |
+| Архитектура | [Обзор](architecture/01_overview.md) · [Агенты](architecture/02_agents.md) · [RAG](architecture/03_rag.md) · [Moodle](architecture/04_moodle.md) · [Принципы безопасности](architecture/05_security.md) · [Технологии](architecture/06_technology_stack.md) |
+| Компоненты | [EduTutor](services/edututor/README.md) · [EduRAG Loader](services/edurag_loader/README.md) · [Плагин Moodle](services/moodle_edututor/README.md) |
+| Исследовательские и квалификационные проекты | [Развитие сервиса поиска и работы с первоисточниками](tutor-loader-vkr/README.md) |
+| Диаграммы | [Редактируемые исходники Mermaid](assets/README.md) |
 
 ---
 
-### О репозитории
+**Автор проекта:** Босенко Т. М. · Московский городской педагогический университет.
 
-Это **публичная витрина продукта**: образовательная концепция, цветные схемы Mermaid с редактируемыми исходниками `.mmd`, компоненты и методические сценарии. Здесь **не размещаются** рабочий исходный код частных сервисов, конфигурации, базы данных, студенческие работы, внутренние служебные материалы.
+**Поддержка проекта:** Благотворительный фонд Владимира Потанина, грант ГСГК-064/26.
 
-**Автор:** Босенко Т. М., Московский городской педагогический университет. Проект выполняется при поддержке Благотворительного фонда Владимира Потанина.
-
-**Использование и цитирование:** [LICENSE](LICENSE) · [CITATION.cff](CITATION.cff). Условия публикации документации не означают открытой лицензии на закрытый код системы.
+Документация: [лицензия](LICENSE) · [сведения для цитирования](CITATION.cff). Публикация документации не означает открытого распространения исходных кодов внутренних сервисов.
